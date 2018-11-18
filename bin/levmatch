@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+from levmatch import parse_log, match
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Extract different looking logs.')
+    parser.add_argument('file', help='Log file path', nargs='?', default=None)
+    parser.add_argument('-m', '--match', help='Matches a given line', default="")
+    parser.add_argument('--encoding', help='Changes encoding', default="utf-8")
+    parser.add_argument('--no-color', help='Removes color hint', action='store_true', default=False)
+    args = parser.parse_args()
+    args.file = open(args.file, encoding=args.encoding) if args.file else sys.stdin
+
+    if not args.match:
+        sys.stdout.writelines(parse_log(args.file, not args.no_color))
+    else:
+        sys.stdout.writelines(match(args.file, args.match))
